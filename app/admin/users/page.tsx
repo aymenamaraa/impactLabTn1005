@@ -160,6 +160,14 @@ export default function UsersPage() {
     }
   }
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-col">
@@ -317,7 +325,7 @@ export default function UsersPage() {
                           {user.status === "active" ? "Active" : "Inactive"}
                         </span>
                       </TableCell>
-                      <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatDate(user.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

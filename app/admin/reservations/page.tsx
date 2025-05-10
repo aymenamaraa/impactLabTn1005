@@ -147,6 +147,14 @@ export default function ReservationsPage() {
     }
   }
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -225,7 +233,7 @@ export default function ReservationsPage() {
                     <TableRow key={reservation.id}>
                       <TableCell className="font-medium">{reservation.roomName}</TableCell>
                       <TableCell>{reservation.userName}</TableCell>
-                      <TableCell>{new Date(reservation.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatDate(reservation.date)}</TableCell>
                       <TableCell>
                         {reservation.startTime.replace(":", ":")} - {reservation.endTime.replace(":", ":")}
                       </TableCell>
