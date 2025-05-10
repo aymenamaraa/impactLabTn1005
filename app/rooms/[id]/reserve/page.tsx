@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Navbar } from "@/components/navbar"
@@ -22,7 +21,7 @@ import { getCurrentUser } from "@/lib/actions/auth-actions"
 import type { RoomWithId } from "@/lib/models/room"
 
 export default function ReservePage({ params }: { params: { id: string } }) {
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [date, setDate] = useState<Date | null>(null)
   const [startTime, setStartTime] = useState("09:00")
   const [endTime, setEndTime] = useState("10:00")
   const [step, setStep] = useState(1)
@@ -33,6 +32,10 @@ export default function ReservePage({ params }: { params: { id: string } }) {
   const router = useRouter()
 
   const roomId = params.id
+
+  useEffect(() => {
+    setDate(new Date())
+  }, [])
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -99,7 +102,6 @@ export default function ReservePage({ params }: { params: { id: string } }) {
       if (result.error) {
         setError(result.error)
       } else {
-        // Redirect to confirmation page
         router.push(`/rooms/${roomId}/reserve/confirmation`)
       }
     } catch (err) {
@@ -107,7 +109,6 @@ export default function ReservePage({ params }: { params: { id: string } }) {
     }
   }
 
-  // Calculate total price
   const calculateTotalPrice = () => {
     if (!room || !startTime || !endTime) return 0
 
@@ -158,7 +159,6 @@ export default function ReservePage({ params }: { params: { id: string } }) {
             <p className="text-neutral-grey mt-2">Complete the form below to book {room.name}.</p>
           </div>
 
-          {/* Reservation Steps */}
           <div className="mb-8">
             <div className="flex items-center justify-center max-w-3xl mx-auto">
               <div
@@ -204,7 +204,6 @@ export default function ReservePage({ params }: { params: { id: string } }) {
           {error && <div className="bg-error/10 text-error p-3 rounded-md mb-4">{error}</div>}
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Reservation Form */}
             <div className="md:col-span-2">
               {step === 1 && (
                 <Card>
@@ -431,7 +430,6 @@ export default function ReservePage({ params }: { params: { id: string } }) {
               )}
             </div>
 
-            {/* Room Details Sidebar */}
             <div className="md:col-span-1">
               <Card>
                 <div className="relative h-48">
