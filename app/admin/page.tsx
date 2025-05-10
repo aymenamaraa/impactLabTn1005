@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useSelector } from "react-redux"
 import type { RootState } from "@/lib/store"
@@ -14,19 +14,35 @@ import Link from "next/link"
 
 export default function AdminDashboard() {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
-  // useEffect(() => {
-  //   // Redirect if not authenticated or not an admin
-  //   if (!isAuthenticated || user?.role !== "admin") {
-  //     router.push("/login")
-  //   }
-  // }, [isAuthenticated, user, router])
+  useEffect(() => {
+    // Redirect if not authenticated or not an admin
+    if (!isAuthenticated || user?.role !== "admin") {
+      router.push("/login")
+      return
+    }
+    setIsLoading(false)
+  }, [isAuthenticated, user, router])
 
-  // // If not authenticated or not admin, don't render the dashboard
-  // if (!isAuthenticated || user?.role !== "admin") {
-  //   return null
-  // }
+  // Show loading state while checking auth
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <p>Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  // If not authenticated or not admin, the useEffect will handle redirect
+  if (!isAuthenticated || user?.role !== "admin") {
+    return null
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
